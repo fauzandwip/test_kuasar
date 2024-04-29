@@ -1,5 +1,6 @@
 const { GraphQLScalarType } = require('graphql');
 
+// custom date scalar
 const dateScalar = new GraphQLScalarType({
 	name: 'Date',
 	description: 'Date custom scalar type',

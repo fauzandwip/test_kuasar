@@ -1,6 +1,7 @@
 const { GraphQLError } = require('graphql');
 const { ApolloServerErrorCode } = require('@apollo/server/errors');
 
+// error handler function to handle errors
 const errorHandler = async (err) => {
 	let message, messages, code, statusCode;
 
@@ -38,7 +39,6 @@ const errorHandler = async (err) => {
 			break;
 	}
 
-	console.log(message, messages, code);
 	return new GraphQLError(message ? message : messages, {
 		extensions: {
 			code,

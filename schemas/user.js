@@ -54,12 +54,12 @@ const userTypeDefs = `#graphql
     access_token: String!
     user: UserLogin
   }
-
+  
   # query user
   type Query {
     user: User
   }
-
+  
   # mutation user
   type Mutation {
     register(user: NewUser): ResponseRegister
@@ -68,8 +68,10 @@ const userTypeDefs = `#graphql
 `;
 
 const userResolvers = {
+	// custom date scalar
 	Date: dateScalar,
 	Mutation: {
+		// user register resolvers
 		register: async (_, args) => {
 			try {
 				const { username, email, password } = args.user;
@@ -89,6 +91,7 @@ const userResolvers = {
 				throw await errorHandler(error);
 			}
 		},
+		// user login resolvers
 		login: async (_, args) => {
 			try {
 				const { email, password } = args;
@@ -107,8 +110,10 @@ const userResolvers = {
 					};
 				}
 
+				// find the user from database
 				const user = await User.findOne({ where: { email } });
 
+				// check if user not founded or the password not the same
 				if (!user || !comparePassword(password, user.password)) {
 					throw {
 						name: 'Unauthenticated',
@@ -116,6 +121,7 @@ const userResolvers = {
 					};
 				}
 
+				// sign access token with jsonwebtoken helper function
 				const accessToken = signToken({ id: user.id, email: user.email });
 
 				return {
